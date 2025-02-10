@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function App() {
-  const [data, setData] = useState(null);
+  const [studentMarks, setStudentMarks] = useState([]);
 
   useEffect(() => {
     // Fetch data from the backend
-    axios.get('http://localhost:3001/api/data')
+    axios.get('http://localhost:3001/api/student-marks')
       .then(response => {
-        setData(response.data.message);
+        setStudentMarks(response.data);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -17,8 +17,23 @@ function App() {
 
   return (
     <div>
-      <h1>React App</h1>
-      <p>Data from backend: {data}</p>
+      <h1>Student Marks</h1>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Iteration 1</th>
+          </tr>
+        </thead>
+        <tbody>
+          {studentMarks.map((student, index) => (
+            <tr key={index}>
+              <td>{student.name}</td>
+              <td>{student.iteration1}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
