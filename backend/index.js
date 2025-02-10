@@ -41,6 +41,10 @@ db.once('open', () => {
 const studentMarkSchema = new mongoose.Schema({
   name: String,
   iteration1: Number,
+  iteration2: Number,
+  iteration3: Number,
+  iteration4: Number,
+  yearMark: Number,
 });
 
 const server = http.createServer(app);

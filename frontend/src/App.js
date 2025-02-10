@@ -30,6 +30,10 @@ function App() {
             <tr key={index}>
               <td>{student.name}</td>
               <td>{student.iteration1}</td>
+              <td>{student.iteration2}</td>
+              <td>{student.iteration3}</td>
+              <td>{student.iteration4}</td>
+              <td>{student.yearMark}</td>
             </tr>
           ))}
         </tbody>
