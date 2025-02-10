@@ -26,7 +26,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {studentMarks.map((student, index) => (
+          {Array.isArray(studentMarks) && studentMarks.map((student, index) => (
             <tr key={index}>
               <td>{student.name}</td>
               <td>{student.iteration1}</td>
