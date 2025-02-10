@@ -25,6 +25,6 @@ jobs:
     - name: Build-Backend
       run: |
         cd backend
-        npm install
-        npx webpack
+        npm install -y
+        npx webpack -y
         node index.js
