@@ -22,9 +22,22 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Build-Backend
+    - name: Install Dependencies
       run: |
         cd backend
         npm install -y
+        npm install -D webpack-cli
+
+    - name: Build-Backend
+      run: |
+        cd backend
         npx webpack -y
         node index.js
+
+    - name: Build-Frontend
+      run: |
+        cd frontend
+        npm install -y
+        npm run build
+
+
