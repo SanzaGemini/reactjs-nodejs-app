@@ -25,13 +25,13 @@ jobs:
     - name: Build-Backend
       run: |
         cd backend
-        install -y
+        install 
         node index.js
 
     - name: Build-Frontend
       run: |
         cd frontend
-        npm install -y
+        npm install 
         npm run build
 
 
