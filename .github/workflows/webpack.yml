@@ -20,18 +20,12 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-
-    - name: Install Dependencies
-      run: |
-        cd backend
-        npm install -y
-        npm install -D webpack-cli
+        node-version: ${{ matrix.node-version }} 
 
     - name: Build-Backend
       run: |
         cd backend
-        npx webpack -y
+        install -y
         node index.js
 
     - name: Build-Frontend
