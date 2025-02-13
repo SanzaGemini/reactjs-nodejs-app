@@ -6,7 +6,7 @@ function App() {
 
   useEffect(() => {
     // Fetch data from the backend
-    axios.get('http://localhost:3001/api/student-marks')
+    axios.get('http://localhost:5000/api/student-marks')
       .then(response => {
         setStudentMarks(response.data);
       })
