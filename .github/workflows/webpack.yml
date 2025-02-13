@@ -1,4 +1,4 @@
-name: Build and Test Docker Containers
+name: Build, Push and Test Docker Containers
 
 on:
   push:
