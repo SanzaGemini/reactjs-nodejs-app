@@ -38,7 +38,7 @@ jobs:
       - name: Build & push Docker image
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
-          image: sanelevilakazi/MERN-stack-app
+          image: sanelevilakazi/mern-stack-app
           tags: latest
           registry: docker.io
           dockerfile: docker-compose.yml
