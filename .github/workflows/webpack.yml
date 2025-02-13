@@ -43,8 +43,8 @@ jobs:
           registry: docker.io
           dockerfile: ./backend/Dockerfile
           buildx-args: --platform linux/amd64,linux/arm64
-          context: .
-          username: ${{ secrets.DOCKER_USERNAME }}
+          context: ./backend
+          usernam/be: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build & push Client image
@@ -55,6 +55,6 @@ jobs:
           registry: docker.io
           dockerfile: ./frontend/Dockerfile
           buildx-args: --platform linux/amd64,linux/arm64
-          context: .
+          context: ./frontend
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
