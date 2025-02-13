@@ -1,80 +1,62 @@
-const express = require('express');
-const path = require('path');
-const http = require('http');
-const { HttpAgent } = require('agentkeepalive');
-const mongoose = require('mongoose');
-const cors = require('cors');
+const express = require("express");
+const path = require("path");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 5000;
+
+const MONGO_URL = "mongodb://localhost:27017/studentDB";
+const MONGO_URL_Docker = "mongodb://root:example@db:27017/studentDB"
 
 const app = express();
-const keepaliveAgent = new HttpAgent({});
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../frontend/build')));
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/studentDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// Serve static files from React frontend
+app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-// API endpoint example
-app.get('/api/data', (req, res) => {
-  res.json({ message: 'Hello from the backend!' });
-});
+mongoose
+  .connect(MONGO_URL_Docker, {
+    useNewUrlParser: true, // Not needed in MongoDB 4+, but safe to keep
+    useUnifiedTopology: true, // Not needed in MongoDB 4+, but safe to keep
+    authSource: "admin", // Required when using authentication
+  }
+  )
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
-// Handle React routing, return all requests to React app
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
-});
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
 // Define a schema for Student Marks
 const studentMarkSchema = new mongoose.Schema({
   name: String,
   iteration1: Number,
 });
 
-const server = http.createServer(app);
-server.agent = keepaliveAgent;
-
 // Create a model
-const StudentMark = mongoose.model('StudentMark', studentMarkSchema);
+const StudentMark = mongoose.model("StudentMark", studentMarkSchema);
 
-server.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+// API endpoint example
+app.get("/api/data", (req, res) => {
+  res.json({ message: "Hello from the backend!" });
 });
 
-// API endpoint to fetch data
-app.get('/api/student-marks', async (req, res) => {
+// API endpoint to fetch student marks
+app.get("/api/student-marks", async (req, res) => {
   try {
     const marks = await StudentMark.find({});
     res.json(marks);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching data', error });
+    res.status(500).json({ message: "Error fetching data", error });
   }
+});
+
+// Handle React routing (for frontend navigation)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
 });
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`🚀 Server is running on http://localhost:${port}`);
 });
-
-
-
-
-
-
-
-
-
-
-
