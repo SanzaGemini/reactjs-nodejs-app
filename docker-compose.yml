@@ -3,46 +3,28 @@ version: "3.8"
 
 # Telling docker-compose to build the client and server images and run them in containers.
 services:
-  client:
-    
-    # Telling docker-compose to build the client image using the Dockerfile in the client directory.
-    build: ./frontend
-    # Giving the container a name.
-    container_name: frontendapp_c
-    # Mapping the port 3000 on the host machine to the port 3000 on the container.
-    ports:
-      - "3000:3000"
-    # Mapping the client directory on the host machine to the /app directory on the container.
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules  # Prevents overwriting node_modules in the container
-    # Environment variables (if needed)
-    environment:
-      - NODE_ENV=development
-    # Allows you to run the container in detached mode.
-    stdin_open: true
-    tty: true
-    # Depends on the server service (if the client depends on the server)
+  frontend:
+    image: sanelevilakazi/mern-frontend
     depends_on:
       - server
+    ports:
+      - '3001:3001'
+    environment:
+      - REACT_APP_API_URL=http://localhost:3000
+
+    container_name: frontendapp_c
+    restart: always
 
   server:
-    # Telling docker-compose to build the server image using the Dockerfile in the server directory.
-    build: ./backend
-    container_name: backendapp_c
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules  # Prevents overwriting node_modules in the container
-    # Environment variables (if needed)
-    environment:
-      - NODE_ENV=development
-    # Depends on any other services (if applicable)
+    image: sanelevilakazi/mern-backend-api
     depends_on:
-      - db  # Example: If you have a database service
-
-  # Example of a database service (if needed)
+      - db
+    ports:
+      - '3000:3000'
+    environment:
+      - MONGO_URI=mongodb://root:example@db:27017/StudentMarks
+    container_name: backendapp_c
+    restart: always
   db:
     image: mongo
     container_name: mongodb_c

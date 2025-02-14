@@ -43,7 +43,7 @@ jobs:
           file: ./backend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: sanelevilakazi/mern-backend-api:0.0.1v1
+          tags: sanelevilakazi/mern-backend-api
 
   build-frontend:
     runs-on: ubuntu-latest
@@ -78,6 +78,6 @@ jobs:
           file: ./frontend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: sanelevilakazi/mern-frontend:0.0.1v1
+          tags: sanelevilakazi/mern-frontend
 
 
