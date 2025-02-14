@@ -1,60 +1,48 @@
 # The version of the docker-compose.
 version: "3.8"
 
-# Telling docker-compose to build the client and server images and run them in containers.
 services:
   client:
-    
-    # Telling docker-compose to build the client image using the Dockerfile in the client directory.
     build: ./frontend
-    # Giving the container a name.
     container_name: frontendapp_c
-    # Mapping the port 3000 on the host machine to the port 3000 on the container.
     ports:
       - "3000:3000"
-    # Mapping the client directory on the host machine to the /app directory on the container.
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules  # Prevents overwriting node_modules in the container
-    # Environment variables (if needed)
     environment:
       - NODE_ENV=development
-    # Allows you to run the container in detached mode.
     stdin_open: true
     tty: true
-    # Depends on the server service (if the client depends on the server)
     depends_on:
       - server
 
   server:
-    # Telling docker-compose to build the server image using the Dockerfile in the server directory.
     build: ./backend
     container_name: backendapp_c
     ports:
       - "5000:5000"
-    volumes:
-      - ./backend:/app
-      - /app/node_modules  # Prevents overwriting node_modules in the container
-    # Environment variables (if needed)
     environment:
       - NODE_ENV=development
-    # Depends on any other services (if applicable)
+      - PORT=5000
     depends_on:
-      - db  # Example: If you have a database service
+      db:
+        condition: service_healthy  # ✅ Waits for MongoDB to be ready
 
-  # Example of a database service (if needed)
   db:
     image: mongo
     container_name: mongodb_c
+    restart: always  # ✅ Ensures MongoDB restarts if it crashes
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_DATA_DIR: /data/StudentMarks
     ports:
       - "27017:27017"
     volumes:
-      - mongodb_data:/data/StudentMarks
+      - mongodb_data:/data/db
+    healthcheck:  # ✅ Ensures MongoDB is ready before backend starts
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet mongodb://root:example@db:27017/admin
+      interval: 10s
+      retries: 5
+      start_period: 20s
 
-# Define volumes (if needed)
+# Define volumes
 volumes:
   mongodb_data:
