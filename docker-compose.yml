@@ -1,7 +1,5 @@
-# The version of the docker-compose.
 version: "3.8"
 
-# Telling docker-compose to build the client and server images and run them in containers.
 services:
   frontend:
     image: sanelevilakazi/mern-frontend
@@ -10,8 +8,7 @@ services:
     ports:
       - '3001:3001'
     environment:
-      - REACT_APP_API_URL=http://localhost:3000
-
+      - REACT_APP_API_URL=http://server:3000
     container_name: frontendapp_c
     restart: always
     networks:
@@ -20,25 +17,26 @@ services:
   server:
     image: sanelevilakazi/mern-backend-api
     depends_on:
-      - mongo
+      - db
     ports:
       - '3000:3000'
     environment:
-      - MONGO_URI=mongodb://root:example@db:27017/StudentMarks
+      - MONGO_URI=mongodb://root:db:27017//data/db
     container_name: backendapp_c
     restart: always
     networks:
       - app-network
-  mongo:
+
+  db:
     image: mongo:latest
-    container_name: mongo
+    container_name: db
     ports:
       - "27017:27017"
+    volumes:
+      - mongo-data:/StudentMarks
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-    volumes:
-      - mongo-data:/data/db
     networks:
       - app-network
 
