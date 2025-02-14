@@ -14,29 +14,37 @@ services:
 
     container_name: frontendapp_c
     restart: always
+    networks:
+      - app-network
 
   server:
     image: sanelevilakazi/mern-backend-api
     depends_on:
-      - db
+      - mongo
     ports:
       - '3000:3000'
     environment:
       - MONGO_URI=mongodb://root:example@db:27017/StudentMarks
     container_name: backendapp_c
     restart: always
-  db:
-    image: mongo
-    container_name: mongodb_c
+    networks:
+      - app-network
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_DATA_DIR: /data/StudentMarks
-    ports:
-      - "27017:27017"
     volumes:
-      - mongodb_data:/data/StudentMarks
+      - mongo-data:/data/db
+    networks:
+      - app-network
 
-# Define volumes (if needed)
 volumes:
-  mongodb_data:
+  mongo-data:
+
+networks:
+  app-network:
+    driver: bridge
